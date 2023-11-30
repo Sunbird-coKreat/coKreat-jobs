@@ -18,7 +18,7 @@ class UserDeleteStreamTask(config: UserDeleteConfig, kafkaConnector: FlinkKafkaC
   private[this] val logger = LoggerFactory.getLogger(classOf[UserDeleteStreamTask])
 
   def process(): Unit = {
-    implicit val env: StreamExecutionEnvironment = FlinkUtil.getExecutionContext(config)
+  implicit val env: StreamExecutionEnvironment = FlinkUtil.getExecutionContext(config)
     //implicit val env: StreamExecutionEnvironment = StreamExecutionEnvironment.createLocalEnvironment()
     implicit val eventTypeInfo: TypeInformation[Event] = TypeExtractor.getForClass(classOf[Event])
     implicit val mapTypeInfo: TypeInformation[util.Map[String, AnyRef]] = TypeExtractor.getForClass(classOf[util.Map[String, AnyRef]])
@@ -41,10 +41,21 @@ class UserDeleteStreamTask(config: UserDeleteConfig, kafkaConnector: FlinkKafkaC
 object UserDeleteStreamTask {
 
   def main(args: Array[String]): Unit = {
+    val params = ParameterTool.fromArgs(args);
+    val myConfig = ConfigFactory.parseString(s"kafka.input.topic=${params.get("kafka.input.topic")}")
+    /*val env = System.getenv
+    val envvar1 = env.get("kafka-server")
+    val envvar2 = env.get("kafka.input.topic")
+    val kafkaInputTopic: String = ConfigFactory.systemEnvironment().getString("kafka.input.topic")
+    println(kafkaInputTopic);*/
+
     val configFilePath = Option(ParameterTool.fromArgs(args).get("config.file.path"))
     val config = configFilePath.map {
       path => ConfigFactory.parseFile(new File(path)).resolve()
-    }.getOrElse(ConfigFactory.load("user-delete.conf").withFallback(ConfigFactory.systemEnvironment()))
+    //}.getOrElse(ConfigFactory.load("user-delete.conf").withFallback(ConfigFactory.systemProperties()).withFallback(myConfig))
+    }.getOrElse(myConfig.withFallback(ConfigFactory.load("user-delete.conf")).withFallback(ConfigFactory.systemProperties()))
+
+
     val userDeleteConfig = new UserDeleteConfig(config)
     val kafkaUtil = new FlinkKafkaConnector(userDeleteConfig)
     val httpUtil = new HttpUtil

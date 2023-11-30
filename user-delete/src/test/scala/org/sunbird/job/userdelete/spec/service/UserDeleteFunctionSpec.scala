@@ -12,7 +12,7 @@ import org.sunbird.spec.BaseTestSpec
 
 import java.util
 
-class CoKreatUserDeleteFunctionSpec extends BaseTestSpec {
+class UserDeleteFunctionSpec extends BaseTestSpec {
   implicit val mapTypeInfo: TypeInformation[util.Map[String, AnyRef]] = TypeExtractor.getForClass(classOf[util.Map[String, AnyRef]])
   implicit val stringTypeInfo: TypeInformation[String] = TypeExtractor.getForClass(classOf[String])
 

@@ -20,6 +20,7 @@ class UserDeleteConfig(override val config: Config) extends BaseJobConfig(config
 
   // Kafka Topics Configuration
   val kafkaInputTopic: String = config.getString("kafka.input.topic")
+  println(kafkaInputTopic);
   override val kafkaConsumerParallelism: Int = config.getInt("task.consumer.parallelism")
   override val parallelism: Int = config.getInt("task.parallelism")
   val linkCollectionParallelism: Int = if (config.hasPath("task.link-collection.parallelism"))
