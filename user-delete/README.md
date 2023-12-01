@@ -1,6 +1,6 @@
-# Auto Creator V2
+# User Delete
 
-Auto Creator V2 job
+User Delete job
 
 ## Getting Started
 
@@ -52,7 +52,7 @@ kubectl create -f knowledge-platform-job/kubernetes/taskmanager-deployment.yaml
 kubectl port-forward deployment/flink-jobmanager 8081:8081
 
 # Submit the job to the Kubernetes single node cluster flink-cluster
-./bin/flink run -m localhost:8081 <knowledge-platform-job>/auto-creator-v2/target/auto-creator-v2-0.0.1.jar
+./bin/flink run -m localhost:8081 <cokreat-jobs>/user-delete/target/user-delete-0.0.1.jar
 
 # Commands to delete the pods created in the cluster
 kubectl delete deployment/flink-jobmanager
