@@ -44,19 +44,13 @@ class UserDeleteFunction(config: UserDeleteConfig, httpUtil: HttpUtil)
                               metrics: Metrics): Unit = {
     metrics.incCounter(config.totalEventsCount)
     // TODO: Check if object already exists. If exists, add validation based on pkgVersion
-    println(event.action);
-    println(event.userId);
-    println("test-vk");
-
     if (event.isValid) {
-      println("valid");
-      //logger.info("Processing event for user delete operation having identifier : " + event.userId)
-      //logger.debug("event edata : " + event.eData)
-      val requestUrl = "http://localhost:6000/program/v1/user/366a95a0-35d5-4408-8c37-8d60f8fab0da"
-      val reqHeaders = Map[String, String]("Content-Type" -> "application/json",
-        "Authorization" -> "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI2ZjE2YmI0Y2UyYjA0ODc1YTI0NjZiNDQ3MDcwYzJmOSJ9.AKtOAdgnQsycjTk1FlOe8DNsvElxOzh99o92bl0t3Ls")
-      logger.info("ContentAutoCreator :: searchContent :: Search Content requestUrl: " + requestUrl)
-      val httpResponse = httpUtil.authDelete(requestUrl, reqHeaders);
+      logger.info("Processing event for user delete operation having identifier : " + event.userId)
+      logger.debug("event edata : " + event.eData)
+
+      val requestUrl = s"${config.programServiceBaseUrl}/v1/user/${event.userId}"
+      logger.info("UserDelete :: requestUrl: " + requestUrl)
+      val httpResponse = httpUtil.delete(requestUrl);
       if (httpResponse.status == 200) {
         val response = JSONUtil.deserialize[Map[String, AnyRef]](httpResponse.body)
         val responseCode = response.getOrElse("responseCode", 0).asInstanceOf[String]

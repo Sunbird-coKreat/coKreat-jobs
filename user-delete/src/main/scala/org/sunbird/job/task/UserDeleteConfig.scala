@@ -35,6 +35,8 @@ class UserDeleteConfig(override val config: Config) extends BaseJobConfig(config
   // Consumers
   val eventConsumer = "user-delete-consumer"
   val UserDeleteFunction = "user-delete"
+  val programServiceBaseUrl: String = config.getString("program-service-baseUrl")
+
   val UserDeleteEventProducer = "user-delete-producer"
   val linkCollectionFunction = "link-collection-process"
 
