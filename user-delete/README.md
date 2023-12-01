@@ -24,7 +24,7 @@ mvn clean install
 Flink requires memory to be allocated for both job-manager and task manager. -yjm parameter assigns job-manager memory and -ytm assigns task-manager memory.
 
 ```
-./bin/flink run -m yarn-cluster -p 2 -yjm 1024m -ytm 1024m <knowledge-platform-jobs>/auto-creator-v2/target/auto-creator-v2-0.0.1.jar
+./bin/flink run -m yarn-cluster -p 2 -yjm 1024m -ytm 1024m <cokreat-jobs>/user-delete/target/user-delete-0.0.1.jar
 ```
 
 ### Kubernetes
