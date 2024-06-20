@@ -63,11 +63,14 @@ job_classname: ""
 flink_jobs_console_log_level: INFO
 flink_libraries_log_level: ERROR
 
+### user delete job configuration
 user_delete_kafka_topic_name: "{{ sunbird_instance }}.delete.user"
+ownership_transfer_kafka_topic_name: "{{ sunbird_instance }}.user.ownership.transfer"
 user_delete_group: "{{ sunbird_instance }}_cokreat_user_delete_group"
 
 program_service_baseurl: "http://{{ private_ingressgateway_ip }}/program"
 
+### metrics data transformer job configuration
 metrics_data_transformer_kafka_topic_name: "{{ sunbird_instance }}.learning.graph.events"
 metrics_data_transformer_group: "{{ sunbird_instance }}-metrics-data-transformer-group"
 
@@ -77,3 +80,4 @@ metrics_data_transformer_producer_parallelism: 1
 
 ed_content_service_base_url: "http://{{ private_ingressgateway_ip }}/content"
 dock_content_service_base_url: "http://{{ dock_private_ingressgateway_ip }}/content"
+

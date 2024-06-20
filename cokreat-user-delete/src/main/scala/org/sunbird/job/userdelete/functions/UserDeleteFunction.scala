@@ -41,7 +41,7 @@ class UserDeleteFunction(config: UserDeleteConfig, httpUtil: HttpUtil)
                               metrics: Metrics): Unit = {
     metrics.incCounter(config.totalEventsCount)
     // TODO: Check if object already exists. If exists, add validation based on pkgVersion
-    if (event.isValid) {
+    if (event.isValid(logger)) {
       logger.info("Processing event for user delete operation having identifier : " + event.userId)
       logger.debug("event edata : " + event.eData)
 

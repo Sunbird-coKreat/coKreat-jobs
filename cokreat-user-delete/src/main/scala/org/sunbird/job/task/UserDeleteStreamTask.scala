@@ -2,7 +2,6 @@ package org.sunbird.job.task
 
 import java.io.File
 import java.util
-
 import com.typesafe.config.ConfigFactory
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.java.typeutils.TypeExtractor
@@ -12,7 +11,7 @@ import org.sunbird.job.connector.FlinkKafkaConnector
 import org.sunbird.job.util.{FlinkUtil, HttpUtil}
 import org.slf4j.LoggerFactory
 import org.sunbird.job.userdelete.domain.Event
-import org.sunbird.job.userdelete.functions.UserDeleteFunction
+import org.sunbird.job.userdelete.functions.{OwnershipTransferFunction, UserDeleteFunction}
 
 class UserDeleteStreamTask(config: UserDeleteConfig, kafkaConnector: FlinkKafkaConnector, httpUtil: HttpUtil) {
   private[this] val logger = LoggerFactory.getLogger(classOf[UserDeleteStreamTask])
@@ -31,13 +30,20 @@ class UserDeleteStreamTask(config: UserDeleteConfig, kafkaConnector: FlinkKafkaC
       .uid(config.UserDeleteFunction)
       .setParallelism(config.parallelism)
 
+    val ownershipTransferSource = kafkaConnector.kafkaJobRequestSource[Event](config.ownershipTransferKafkaInputTopic)
+    val ownershipTransferStreamTask = env.addSource(ownershipTransferSource).name(config.ownershipTransferEventConsumer)
+        .uid(config.ownershipTransferEventConsumer).setParallelism(config.kafkaConsumerParallelism)
+        .rebalance
+        .process(new OwnershipTransferFunction(config, httpUtil))
+        .name(config.OwnershipTransferFunction)
+        .uid(config.OwnershipTransferFunction)
+        .setParallelism(config.parallelism)
+
     env.execute(config.jobName)
   }
 }
 
-// $COVERAGE-OFF$ Disabling scoverage as the below code can only be invoked within flink cluster
 object UserDeleteStreamTask {
-
   def main(args: Array[String]): Unit = {
     val configFilePath = Option(ParameterTool.fromArgs(args).get("config.file.path"))
     val config = configFilePath.map {
@@ -50,5 +56,3 @@ object UserDeleteStreamTask {
     task.process()
   }
 }
-
-// $COVERAGE-ON$

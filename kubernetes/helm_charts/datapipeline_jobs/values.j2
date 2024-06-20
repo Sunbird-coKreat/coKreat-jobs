@@ -79,7 +79,6 @@ base_config: |
   kafka {
       broker-servers = "{{ sunbird_kafka_brokers }}"
       zookeeper = "{{ sunbird_zookeepers }}"
-
       producer {
         max-request-size = {{ producer_max_request_size }}
       }
@@ -139,7 +138,10 @@ cokreat-user-delete:
   cokreat-user-delete: |+
     include file("/data/flink/conf/base-config.conf")
     kafka {
-      input.topic = "{{ user_delete_kafka_topic_name }}"
+      input {
+        user_delete_topic = "{{ user_delete_kafka_topic_name }}"
+        ownership_transfer_topic = "{{ ownership_transfer_kafka_topic_name }}"
+      }
       groupId = "{{ user_delete_group }}"
     }
     task {
